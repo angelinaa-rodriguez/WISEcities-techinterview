@@ -1,10 +1,13 @@
+import 'reflect-metadata';
 import { MikroORM } from '@mikro-orm/core';
-import config from './mikro-orm.config';
-import { Product } from './models/Product';
+
+const config = (await import('./mikro-orm.config.cjs')).default;
 
 const seed = async () => {
   const orm = await MikroORM.init(config);
   const em = orm.em.fork();
+
+  const Product = orm.getMetadata().get('Product').class;
 
   const products = [
     {
@@ -22,7 +25,7 @@ const seed = async () => {
   ];
 
   for (const p of products) {
-    const product = new Product();
+    const product = new Product(); // ← ✅ now using correct version
     product.name = p.name;
     product.description = p.description;
     product.price = p.price;
@@ -32,7 +35,9 @@ const seed = async () => {
 
   await em.flush();
   await orm.close();
-  console.log('✅ Seed complete!');
+  console.log('✅ Seeding complete!');
 };
 
-seed();
+seed().catch((err) => {
+  console.error('❌ Seeding failed:', err);
+});

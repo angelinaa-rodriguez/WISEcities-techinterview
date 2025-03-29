@@ -2,18 +2,18 @@ import { Entity, PrimaryKey, Property } from '@mikro-orm/core';
 
 @Entity()
 export class Product {
-  @PrimaryKey()
+  @PrimaryKey({ type: 'number' })
   id!: number;
 
-  @Property()
+  @Property({ type: 'string' })
   name!: string;
 
-  @Property()
+  @Property({ type: 'string' })
   description!: string;
 
-  @Property()
+  @Property({ type: 'number' })
   price!: number;
 
-  @Property()
+  @Property({ type: 'string' })
   imageUrl!: string;
 }

@@ -39,8 +39,8 @@ export default function Header() {
                     
                     {/* Cart count badge */}
                     <div className="absolute -top-1 -right-1 bg-[#f31260] text-white text-xs leading-[16px] font-medium text-center rounded-full px-[6px] py-[2px] min-w-[20px] h-[20px] flex items-center justify-center">
-  3
-</div>
+                        3
+                    </div>
 
                     </button>
 
