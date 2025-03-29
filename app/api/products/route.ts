@@ -1,14 +1,11 @@
 import { NextResponse } from 'next/server';
-import { MikroORM } from '@mikro-orm/core';
+import { initORM } from '../../../lib/orm';
 import { Product } from '../../../models/Product';
 import 'reflect-metadata';
 
 export async function GET() {
   try {
-    // ✅ Dynamic import must happen inside the function
-    const config = (await import('../../../mikro-orm.config.cjs')).default;
-
-    const orm = await MikroORM.init(config);
+    const orm = await initORM();
     const em = orm.em.fork();
 
     const products = await em.find(Product, {});
