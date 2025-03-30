@@ -6,14 +6,11 @@ export async function GET(
   request: Request,
   context: { params: { id: string } }
 ) {
-  
-  const {
-    params: { id },
-  } = context;
-
   try {
+    const { id } = context.params;
     const orm = await initORM();
     const em = orm.em.fork();
+
     const product = await em.findOne(Product, { id: Number(id) });
 
     if (!product) {
