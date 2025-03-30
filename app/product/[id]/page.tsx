@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
+import { useCart } from '../../../lib/CartContext';
 import Image from 'next/image';
 
 type Product = {
@@ -18,6 +19,8 @@ export default function ProductPage() {
 
   const [product, setProduct] = useState<Product | null>(null);
   const [loading, setLoading] = useState(true);
+
+  const { addToCart } = useCart(); // ✅ Use CartContext to update cart
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -69,7 +72,9 @@ export default function ProductPage() {
               });
 
               const data = await res.json();
+
               if (data.success) {
+                addToCart({ id: product.id, quantity: 1 }); // ✅ Update local cart
                 alert('Added to cart!');
               } else {
                 alert('Error adding to cart.');
