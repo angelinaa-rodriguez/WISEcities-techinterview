@@ -14,55 +14,55 @@ const seed = async () => {
       name: 'Headphones',
       description: 'Noise cancelling headphones',
       price: 99.99,
-      imageUrl: 'https://via.placeholder.com/300x300?text=Headphones',
+      imageUrl: '/hero.jpg',
     },
     {
       name: 'Smart Watch',
       description: 'Fitness and notifications on your wrist',
       price: 129.99,
-      imageUrl: 'https://via.placeholder.com/300x300?text=Watch',
+      imageUrl: '/hero.jpg',
     },
     {
       name: 'Bluetooth Speaker',
       description: 'Portable speaker with deep bass and long battery life',
       price: 49.99,
-      imageUrl: 'https://via.placeholder.com/300x300?text=Speaker',
+      imageUrl: '/hero.jpg',
     },
     {
       name: 'Laptop Stand',
       description: 'Adjustable stand for better posture and airflow',
       price: 24.99,
-      imageUrl: 'https://via.placeholder.com/300x300?text=Laptop+Stand',
+      imageUrl: '/hero.jpg',
     },
     {
       name: 'Wireless Mouse',
       description: 'Ergonomic mouse with silent clicks',
       price: 19.99,
-      imageUrl: 'https://via.placeholder.com/300x300?text=Mouse',
+      imageUrl: '/hero.jpg',
     },
     {
       name: 'Reusable Water Bottle',
       description: 'Stainless steel bottle to keep drinks hot or cold',
       price: 17.99,
-      imageUrl: 'https://via.placeholder.com/300x300?text=Water+Bottle',
+      imageUrl: '/hero.jpg',
     },
     {
       name: 'Desk Lamp',
       description: 'LED desk lamp with brightness control and USB port',
       price: 34.99,
-      imageUrl: 'https://via.placeholder.com/300x300?text=Lamp',
+      imageUrl: '/hero.jpg',
     },
     {
       name: 'Noise-Isolating Earbuds',
       description: 'Compact earbuds with mic and tangle-free cable',
       price: 29.99,
-      imageUrl: 'https://via.placeholder.com/300x300?text=Earbuds',
+      imageUrl: '/hero.jpg',
     },
   ];
   
 
   for (const p of products) {
-    const product = new Product(); // ← ✅ now using correct version
+    const product = new Product();
     product.name = p.name;
     product.description = p.description;
     product.price = p.price;
@@ -72,9 +72,9 @@ const seed = async () => {
 
   await em.flush();
   await orm.close();
-  console.log('✅ Seeding complete!');
+  console.log('Seeding complete!');
 };
 
 seed().catch((err) => {
-  console.error('❌ Seeding failed:', err);
+  console.error('Seeding failed:', err);
 });

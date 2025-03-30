@@ -5,6 +5,7 @@ import { useParams } from 'next/navigation';
 import { useCart } from '../../../lib/CartContext';
 import Image from 'next/image';
 import Link from 'next/link';
+import ProductGrid from '../../../components/ProductGrid';
 
 type Product = {
   id: number;
@@ -45,7 +46,7 @@ export default function ProductPage() {
         const randomThree = filtered.sort(() => 0.5 - Math.random()).slice(0, 3);
         setSimilarProducts(randomThree);
       } catch (err) {
-        console.error('❌ Error fetching data:', err);
+        console.error('Error fetching data:', err);
       } finally {
         setLoading(false);
       }
@@ -105,31 +106,7 @@ export default function ProductPage() {
       </div>
 
       {/* Similar products section */}
-      <div className="mt-16">
-        <h2 className="text-2xl font-semibold mb-6">Similar Products</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {similarProducts.map((item) => (
-            <Link
-              key={item.id}
-              href={`/product/${item.id}`}
-              className="border rounded-lg overflow-hidden hover:shadow-lg transition bg-white"
-            >
-              <div className="w-full h-48 relative">
-                <Image
-                  src={item.imageUrl}
-                  alt={item.name}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-              <div className="p-4">
-                <h3 className="font-medium text-lg">{item.name}</h3>
-                <p className="text-sm text-gray-600 mt-1">${item.price}</p>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </div>
+      <ProductGrid products={similarProducts} title="Similar Products" />
     </main>
   );
 }
