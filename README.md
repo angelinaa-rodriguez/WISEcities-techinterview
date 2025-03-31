@@ -75,7 +75,7 @@ npx tsx seed.ts
 npm run dev
 ```
 
-4. Visit the app at **[https](http://localhost:3000)**
+4. Visit the app at **http://localhost:3000)**
 
 
 ## Directory Structure
@@ -92,7 +92,7 @@ npm run dev
 
 ## Final Thoughts
 
-Before this project, I had never worked with **Next.js** or **MikroORM**, so I had to teach myself how to set up a modern full-stack app from scratch. From learning how the App Router works in Next.js to configuring the MikroORM entities and database seeding, I challenged myself to quickly adapt to new tools and frameworks—skills that are critical in any real-world development environment.
+Before this project, I had never worked with **Next.js** or **MikroORM**, so I had to teach myself how to set up a modern full-stack app from scratch. By learning how the App Router works in Next.js and configuring the MikroORM entities and database seeding, I challenged myself to quickly adapt to new tools and frameworks—skills that are critical in any real-world development environment.
 
 One of the biggest challenges I faced was reconciling the pixel-perfect Figma design with the realities of responsive web development. The design was clearly optimized for a fixed 1024px desktop width, but I knew that real users would be accessing the site on a variety of devices. I made the intentional decision to prioritize a responsive experience, even if that meant deviating slightly from exact pixel values in the design.
 
