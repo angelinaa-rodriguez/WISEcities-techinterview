@@ -1,6 +1,9 @@
-// components/ProductGrid.tsx
+'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useCart } from '../lib/CartContext';
 
 export interface Product {
   id: number;
@@ -15,36 +18,97 @@ interface ProductGridProps {
   title?: string;
 }
 
-
-        // ✅ Product Grid
-        //  NOTE:
-        //  This layout uses fixed-width (300px) product cards and a flex layout to match the
-        //  pixel-perfect spacing of the Figma design on desktop (1024px wide).
-        //  While this may appear slightly awkward or uneven on smaller screens (e.g., tablets or mobile),
-        //  I intentionally chose this approach to prioritize visual accuracy on desktop.
-        //  I am aware of how to make the layout more responsive (e.g., using auto-sizing, responsive widths, max-widths),
-        //  but opted for this tradeoff to preserve alignment with the design spec.
-
 const ProductGrid: React.FC<ProductGridProps> = ({ products, title }) => {
+  const [activePriceId, setActivePriceId] = useState<number | null>(null);
+  const { cart, addToCart, removeFromCart } = useCart();
+
+  const handleTogglePrice = (id: number) => {
+    setActivePriceId((prev) => (prev === id ? null : id));
+  };
+
+  const getQuantity = (id: number) => {
+    return cart.find((item) => item.id === id)?.quantity || 0;
+  };
+
   return (
-    <section className="my-8">
-      {title && <h2 className="text-2xl font-semibold mb-4">{title}</h2>}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {products.map((product) => (
-          <div
-            key={product.id}
-            className="bg-white p-4 rounded-xl shadow hover:shadow-md transition"
-          >
-            <img
-              src={product.imageUrl}
-              alt={product.name}
-              className="w-full h-48 object-cover rounded-md"
-            />
-            <h3 className="mt-2 text-lg font-medium">{product.name}</h3>
-            <p className="text-gray-600">{product.description}</p>
-            <p className="mt-1 font-semibold">${product.price.toFixed(2)}</p>
-          </div>
-        ))}
+    <section className="my-8 px-4">
+      {title && (
+        <h2 className="text-2xl font-semibold mb-6 text-center sm:text-left">
+          {title}
+        </h2>
+      )}
+
+      <div className="mx-auto max-w-[1024px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+        {products.map((product) => {
+          const isPriceActive = activePriceId === product.id;
+          const quantity = getQuantity(product.id);
+          const inCart = quantity > 0;
+
+          return (
+            <div
+              key={product.id}
+              className="w-full max-w-[320px] mx-auto p-4 rounded-xl shadow hover:shadow-md transition"
+            >
+              <Link href={`/product/${product.id}`}>
+                <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-3">
+                  <Image
+                    src={product.imageUrl}
+                    alt={product.name}
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+                <h3 className="text-lg font-medium">{product.name}</h3>
+                <p className="text-gray-600 text-sm line-clamp-3">
+                  {product.description}
+                </p>
+              </Link>
+
+              {/* Price & Add to Cart Row */}
+              <div className="h-[64px] flex items-center justify-between px-[12px] gap-[8px] mt-3">
+                {/* Price Pill */}
+                <div
+                  className={`h-[40px] rounded-xl px-[14px] py-[10px] cursor-pointer transition-all flex items-center justify-center ${
+                    isPriceActive ? 'w-[110px] bg-gray-100' : 'w-[90px] hover:bg-gray-50'
+                  }`}
+                  onClick={() => handleTogglePrice(product.id)}
+                >
+                  <span className="text-sm font-semibold leading-[20px] tracking-tight text-black">
+                    ${product.price.toFixed(2)}
+                  </span>
+                </div>
+
+                {/* Cart Controls */}
+                {inCart ? (
+                  <div className="flex items-center h-[40px] overflow-hidden">
+                    <button
+                      className="w-11 h-full bg-zinc-300 text-black text-sm font-medium leading-5 tracking-tight rounded-xl"
+                      onClick={() => removeFromCart(product.id)}
+                    >
+                      −
+                    </button>
+                    <div className="px-4 text-sm font-medium leading-5 tracking-tight text-black">
+                      {quantity}
+                    </div>
+                    <button
+                      className="w-11 h-full bg-zinc-300 text-black text-sm font-medium leading-5 tracking-tight rounded-xl"
+                      onClick={() => addToCart({ id: product.id, quantity: 1 })}
+                    >
+                      +
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    className="h-[40px] rounded-xl px-[14px] py-[10px] bg-zinc-300 text-black text-sm font-medium leading-5 tracking-tight whitespace-nowrap w-[178px]"
+                    onClick={() => addToCart({ id: product.id, quantity: 1 })}
+                  >
+                    Add to Cart
+                  </button>
+                )}
+              </div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
