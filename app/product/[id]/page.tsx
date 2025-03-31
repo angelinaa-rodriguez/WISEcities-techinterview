@@ -22,6 +22,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null);
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
+  const [priceActive, setPriceActive] = useState(false);
 
   const { cart, addToCart, removeFromCart } = useCart();
 
@@ -91,11 +92,16 @@ export default function ProductPage() {
         {/* Product info container */}
         <div className="w-[500px] h-[512px] flex flex-col justify-center gap-4">
           <h1 className="text-[40px] font-medium leading-[44px]">{product.name}</h1>
-          <p className="text-sm text-gray-700">{product.description}</p>
+          <p className="text-sm text-[rgba(161,161,170,1)]">{product.description}</p>
 
-          {/* 💸 Price + Add to Cart Row */}
+          {/* Price + Add to Cart Row */}
           <div className="h-[40px] flex items-center justify-start gap-[8px]">
-            <div className="h-[40px] rounded-xl px-[14px] py-[10px] bg-gray-100 flex items-center justify-center w-[110px]">
+            <div
+              className={`h-[40px] rounded-xl px-[14px] py-[10px] cursor-pointer transition-all flex items-center justify-center ${
+                priceActive ? 'w-[120px] bg-[#f0ecec]' : 'w-[90px] hover:bg-[#f0ecec]'
+              }`}
+              onClick={() => setPriceActive((prev) => !prev)}
+            >
               <span className="text-sm font-semibold leading-5 tracking-tight text-black">
                 ${product.price.toFixed(2)}
               </span>
