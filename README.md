@@ -75,7 +75,7 @@ npx tsx seed.ts
 npm run dev
 ```
 
-4. Visit the app at **http://localhost:3000)**
+4. Visit the app at **http://localhost:3000**
 
 
 ## Directory Structure
