@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useCart } from '../../../lib/CartContext';
 import Image from 'next/image';
@@ -23,46 +23,65 @@ export default function ProductPage() {
   const [similarProducts, setSimilarProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [priceActive, setPriceActive] = useState(false);
+  const [fetchTimedOut, setFetchTimedOut] = useState(false);
 
   const { cart, addToCart, removeFromCart } = useCart();
 
-  const getQuantity = (productId: number) =>
-    cart.find((item) => item.id === productId)?.quantity || 0;
+  const quantityMap = useMemo(() => {
+    const map: Record<number, number> = {};
+    cart.forEach((item) => {
+      map[item.id] = item.quantity;
+    });
+    return map;
+  }, [cart]);
 
   useEffect(() => {
+    const controller = new AbortController();
+
+    const timeout = setTimeout(() => {
+      setFetchTimedOut(true);
+    }, 2000); // Show "not found" only after 2 seconds
+
     const fetchData = async () => {
       try {
         if (!id) return;
 
         const [productRes, allRes] = await Promise.all([
-          fetch(`/api/products/${id}`),
-          fetch('/api/products'),
+          fetch(`/api/products/${id}`, { signal: controller.signal }),
+          fetch('/api/products', { signal: controller.signal }),
         ]);
 
-        if (!productRes.ok || !allRes.ok)
-          throw new Error('Failed to fetch data');
+        if (!productRes.ok || !allRes.ok) throw new Error('Failed to fetch data');
 
         const productData: Product = await productRes.json();
         const allProducts: Product[] = await allRes.json();
 
         setProduct(productData);
 
-        const filtered = allProducts.filter((p) => p.id !== productData.id);
-        const randomThree = filtered
+        const similar = allProducts
+          .filter((p) => p.id !== productData.id)
           .sort(() => 0.5 - Math.random())
           .slice(0, 3);
-        setSimilarProducts(randomThree);
+
+        setSimilarProducts(similar);
       } catch (err) {
-        console.error('Error fetching data:', err);
+        if ((err as any).name !== 'AbortError') {
+          console.error('Error fetching data:', err);
+        }
       } finally {
         setLoading(false);
+        clearTimeout(timeout);
       }
     };
 
     fetchData();
+    return () => {
+      controller.abort();
+      clearTimeout(timeout);
+    };
   }, [id]);
 
-  if (loading) {
+  if (loading || (!product && !fetchTimedOut)) {
     return (
       <div className="flex justify-center items-center w-full h-[300px]">
         <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
@@ -70,31 +89,38 @@ export default function ProductPage() {
     );
   }
 
-  if (!product) return <p className="p-8 text-red-600">Product not found</p>;
+  if (!product && fetchTimedOut) {
+    return <p className="p-8 text-red-600">Product not found</p>;
+  }
 
-  const quantity = getQuantity(product.id);
+  const quantity = quantityMap[product!.id] || 0;
 
   return (
-    <main className="max-w-5xl mx-auto mt-12 px-4 bg-white">
+    <main className="max-w-5xl mx-auto mt-5 px-4 bg-white">
       {/* Main product section */}
       <div className="flex flex-col lg:flex-row gap-8">
         {/* Product image */}
-        <div className="w-full max-w-[512px] h-[512px] relative rounded-xl overflow-hidden">
+        <div className="relative w-full max-w-[512px] aspect-square rounded-xl overflow-hidden mx-auto sm:mx-0">
           <Image
-            src={product.imageUrl}
-            alt={product.name}
+            src={product!.imageUrl}
+            alt={product!.name}
             fill
+            loading="lazy"
             className="object-cover object-center"
             sizes="(max-width: 768px) 100vw, 512px"
           />
         </div>
 
-        {/* Product info container */}
-        <div className="w-[500px] h-[512px] flex flex-col justify-center gap-4">
-          <h1 className="text-[40px] font-medium leading-[44px]">{product.name}</h1>
-          <p className="text-sm text-[rgba(161,161,170,1)]">{product.description}</p>
+        {/* Product info */}
+        <div className="flex-1 flex flex-col justify-center gap-4 px-2 sm:px-0">
+          <h1 className="text-2xl sm:text-[40px] font-medium leading-snug pl-2">
+            {product!.name}
+          </h1>
+          <p className="text-sm text-[rgba(161,161,170,1)] pl-2">
+            {product!.description}
+          </p>
 
-          {/* Price + Add to Cart Row */}
+          {/* Price + Cart */}
           <div className="h-[40px] flex items-center justify-start gap-[8px]">
             <div
               className={`h-[40px] rounded-xl px-[14px] py-[10px] cursor-pointer transition-all flex items-center justify-center ${
@@ -103,7 +129,7 @@ export default function ProductPage() {
               onClick={() => setPriceActive((prev) => !prev)}
             >
               <span className="text-sm font-semibold leading-5 tracking-tight text-black">
-                ${product.price.toFixed(2)}
+                ${product!.price.toFixed(2)}
               </span>
             </div>
 
@@ -111,7 +137,7 @@ export default function ProductPage() {
               <div className="flex items-center h-[40px] overflow-hidden">
                 <button
                   className="w-11 h-full bg-zinc-300 text-black text-sm font-medium leading-5 tracking-tight rounded-xl"
-                  onClick={() => removeFromCart(product.id)}
+                  onClick={() => removeFromCart(product!.id)}
                 >
                   −
                 </button>
@@ -120,7 +146,7 @@ export default function ProductPage() {
                 </div>
                 <button
                   className="w-11 h-full bg-zinc-300 text-black text-sm font-medium leading-5 tracking-tight rounded-xl"
-                  onClick={() => addToCart({ id: product.id, quantity: 1 })}
+                  onClick={() => addToCart({ id: product!.id, quantity: 1 })}
                 >
                   +
                 </button>
@@ -128,7 +154,7 @@ export default function ProductPage() {
             ) : (
               <button
                 className="h-[40px] rounded-xl px-[14px] py-[10px] bg-zinc-300 text-black text-sm font-medium leading-5 tracking-tight whitespace-nowrap w-[178px] hover:bg-gray-300 transition"
-                onClick={() => addToCart({ id: product.id, quantity: 1 })}
+                onClick={() => addToCart({ id: product!.id, quantity: 1 })}
               >
                 Add to Cart
               </button>
@@ -137,21 +163,17 @@ export default function ProductPage() {
         </div>
       </div>
 
-      {/* Divider Line */}
-      <div className="w-[600px] h-px bg-gray-300 my-5 mx-auto" />
+      {/* Divider */}
+      <div className="w-full max-w-[600px] h-px bg-gray-300 my-5 mx-auto" />
 
-      {/* Similar Products Header */}
-      <h2
-        className="text-[32px] font-medium leading-[32px] tracking-tight text-[#11181C] mb-6"
-        style={{ width: '492px' }}
-      >
+      {/* Similar Products */}
+      <h2 className="text-[32px] font-medium leading-[32px] tracking-tight text-[#11181C] mt-4" style={{ width: '492px' }}>
         Similar Products
       </h2>
 
-      {/* Similar Products Grid */}
       <ProductGrid products={similarProducts} />
 
-      {/* See More Products button */}
+      {/* See More Products */}
       <div className="mt-8 flex justify-center pb-8">
         <Link
           href="/"

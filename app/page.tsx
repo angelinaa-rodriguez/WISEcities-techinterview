@@ -2,9 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import Link from 'next/link';
 import ProductGrid from '../components/ProductGrid';
-
 
 type Product = {
   id: number;
@@ -19,19 +17,28 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchProducts = async () => {
       try {
-        const res = await fetch('/api/products');
-        const data = await res.json();
+        const res = await fetch('/api/products', {
+          signal: controller.signal,
+        });
+        if (!res.ok) throw new Error('Network response was not ok');
+        const data: Product[] = await res.json();
         setProducts(data);
       } catch (err) {
-        console.error('Failed to load products:', err);
+        if ((err as any).name !== 'AbortError') {
+          console.error('Failed to load products:', err);
+        }
       } finally {
         setLoading(false);
       }
     };
 
     fetchProducts();
+
+    return () => controller.abort();
   }, []);
 
   return (
@@ -43,25 +50,21 @@ export default function Home() {
             src="/hero.jpg"
             alt="Hero"
             fill
-            className="object-cover rounded-xl"
             priority
+            className="object-cover rounded-xl"
           />
         </div>
       </div>
 
+      {/* Loading or Product Grid */}
       {loading ? (
-        // Loading Spinner
         <div className="flex justify-center items-center w-full h-[300px]">
-          <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
+          <div className="w-12 h-12 border-4 border-gray-300 border-t-black rounded-full animate-spin" />
         </div>
       ) : (
-
-        /*{ Product Grid }*/
-        <div className="max-w-[1024px] mx-auto">
+        <div className="max-w-[1024px] mx-auto w-full">
           <ProductGrid products={products} />
         </div>
-
-        
       )}
     </main>
   );

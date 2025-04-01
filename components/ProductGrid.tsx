@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useCart } from '../lib/CartContext';
@@ -22,16 +22,21 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, title }) => {
   const [activePriceId, setActivePriceId] = useState<number | null>(null);
   const { cart, addToCart, removeFromCart } = useCart();
 
+  // Memoized quantity map for faster lookup
+  const quantityMap = useMemo(() => {
+    const map: Record<number, number> = {};
+    cart.forEach((item) => {
+      map[item.id] = item.quantity;
+    });
+    return map;
+  }, [cart]);
+
   const handleTogglePrice = (id: number) => {
     setActivePriceId((prev) => (prev === id ? null : id));
   };
 
-  const getQuantity = (id: number) => {
-    return cart.find((item) => item.id === id)?.quantity || 0;
-  };
-
   return (
-    <section className="my-8 px-4">
+    <section className="my-4 px-4">
       {title && (
         <h2 className="text-2xl font-semibold mb-6 text-center sm:text-left">
           {title}
@@ -41,7 +46,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, title }) => {
       <div className="mx-auto max-w-[1024px] grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {products.map((product) => {
           const isPriceActive = activePriceId === product.id;
-          const quantity = getQuantity(product.id);
+          const quantity = quantityMap[product.id] || 0;
           const inCart = quantity > 0;
 
           return (
@@ -49,12 +54,13 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, title }) => {
               key={product.id}
               className="w-full max-w-[320px] mx-auto p-4 rounded-xl shadow hover:shadow-md transition"
             >
-              <Link href={`/product/${product.id}`}>
+              <Link href={`/product/${product.id}`} prefetch>
                 <div className="relative w-full aspect-[16/9] rounded-xl overflow-hidden mb-3">
                   <Image
                     src={product.imageUrl}
                     alt={product.name}
                     fill
+                    loading="lazy"
                     className="object-cover"
                   />
                 </div>

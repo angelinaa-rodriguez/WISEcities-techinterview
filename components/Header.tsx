@@ -10,8 +10,11 @@ export default function Header() {
 
   return (
     <header className="bg-white">
-      <div className="w-full max-w-[1024px] h-16 mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-[17px] border-b">
-        
+      <div
+        className="w-full max-w-[1024px] h-16 mx-auto flex justify-between items-center px-4 sm:px-6 lg:px-[17px]"
+        style={{ borderBottom: '1px solid rgba(229, 231, 235, 0.72)' }}
+      >
+              
         {/* Left side (Logo and Name as Link to homepage) */}
         <Link href="/" className="flex items-center w-[127px] h-[32px] gap-0 text-black hover:opacity-80 transition">
           <div className="w-8 h-8 flex items-center justify-center">
