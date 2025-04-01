@@ -15,6 +15,7 @@
     "@mikro-orm/migrations": "^6.4.11",
     "@mikro-orm/sqlite": "^6.4.11",
     "@nextui-org/react": "^2.6.11",
+    "docker": "^1.0.0",
     "lucide-react": "^0.485.0",
     "next": "15.2.4",
     "react": "^19.0.0",

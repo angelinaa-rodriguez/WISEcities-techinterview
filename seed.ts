@@ -1,14 +1,13 @@
 import 'reflect-metadata';
 import { MikroORM } from '@mikro-orm/core';
+import { Product } from './models/Product'; 
+import { Cart } from './models/Cart';     
 
 const config = (await import('./mikro-orm.config.cjs')).default;
 
 const seed = async () => {
   const orm = await MikroORM.init(config);
   const em = orm.em.fork();
-
-  const Product = orm.getMetadata().get('Product').class;
-  const Cart = orm.getMetadata().get('Cart').class;
 
 
   // Delete old data first to prevent duplicates

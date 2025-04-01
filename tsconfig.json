@@ -32,9 +32,7 @@
     "mikro-orm.config.cjs",
     ".next/types/**/*.ts"
 , "next.config.js", "app"  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules", ".next"]
 }
 
 

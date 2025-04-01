@@ -1,10 +1,16 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
 import { initORM } from '../../../../lib/orm';
 import { Product } from '../../../../models/Product';
 
+type Context = {
+  params: {
+    id: string;
+  };
+};
+
 export async function GET(
-  request: Request,
-  context: { params: { id: string } }
+  request: NextRequest,
+  context: Context
 ) {
   try {
     const { id } = context.params;
@@ -19,7 +25,7 @@ export async function GET(
 
     return NextResponse.json(product);
   } catch (err) {
-    console.error('❌ Failed to fetch product:', err);
+    console.error('Failed to fetch product:', err);
     return NextResponse.json({ error: 'Something went wrong' }, { status: 500 });
   }
 }

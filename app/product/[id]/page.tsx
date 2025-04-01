@@ -65,7 +65,7 @@ export default function ProductPage() {
 
         setSimilarProducts(similar);
       } catch (err) {
-        if ((err as any).name !== 'AbortError') {
+        if ((err as { name?: string })?.name !== 'AbortError') {
           console.error('Error fetching data:', err);
         }
       } finally {

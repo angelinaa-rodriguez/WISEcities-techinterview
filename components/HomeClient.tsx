@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
-import ProductGrid from '../components/ProductGrid';
+import ProductGrid from './ProductGrid';
 
 type Product = {
   id: number;
@@ -12,7 +12,7 @@ type Product = {
   imageUrl: string;
 };
 
-export default function Home() {
+export default function HomeClient() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -28,7 +28,7 @@ export default function Home() {
         const data: Product[] = await res.json();
         setProducts(data);
       } catch (err) {
-        if ((err as { name?: string })?.name !== 'AbortError') {
+        if ((err instanceof DOMException && err.name !== 'AbortError')) {
           console.error('Failed to load products:', err);
         }
       } finally {
@@ -37,7 +37,6 @@ export default function Home() {
     };
 
     fetchProducts();
-
     return () => controller.abort();
   }, []);
 

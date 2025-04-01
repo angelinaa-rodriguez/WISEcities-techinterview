@@ -1,7 +1,12 @@
-/** @type {import('next').NextConfig} */
+// next.config.js
 const nextConfig = {
   images: {
-    domains: ['via.placeholder.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'example.com', // replace with your actual domain
+      },
+    ],
   },
 };
 
