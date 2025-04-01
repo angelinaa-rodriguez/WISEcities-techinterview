@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'example.com', // replace with your actual domain
+        hostname: 'example.com', // Replace with real domain name
       },
     ],
   },

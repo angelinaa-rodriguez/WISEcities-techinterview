@@ -40,7 +40,7 @@ export default function ProductPage() {
 
     const timeout = setTimeout(() => {
       setFetchTimedOut(true);
-    }, 5000);
+    }, 8000);
 
     const fetchData = async () => {
       try {

@@ -1,4 +1,3 @@
-// app/metadata.ts (or app/page/metadata.ts if using folders)
 export const metadata = {
   title: 'NotAmazon - Home',
   description:
