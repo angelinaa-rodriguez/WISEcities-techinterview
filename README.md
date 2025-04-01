@@ -87,12 +87,12 @@ npm run dev
 
 4. Run the Docker
 
-Windows:
+Windows (Powershell):
 ```Powershell
 Remove-Item wise-cities.db -ErrorAction Ignore; npx tsx seed.ts; docker build --no-cache -t wise-cities-ecommerce .; docker run -p 3000:3000 -v "${PWD}\wise-cities.db:/app/wise-cities.db" wise-cities-ecommerce
 ```
 
-Mac/Linux:
+Mac/Linux (Bash):
 ``` Bash
 rm -f wise-cities.db && npx tsx seed.ts && docker build --no-cache -t wise-cities-ecommerce . && docker run -p 3000:3000 -v "$(pwd)/wise-cities.db:/app/wise-cities.db" wise-cities-ecommerce
 
