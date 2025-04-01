@@ -90,6 +90,13 @@ npm run dev
 
 - /seed.ts – Script to initialize product data in SQLite
 
+## Optional Enhancement: SEO Metadata
+
+I attempted to implement dynamic metadata using the Next.js `metadata` API for SEO optimization. While I made progress and was able to set metadata like title and description, I ran into some persistent build-time TypeScript issues when working with API route parameters that I wasn’t able to fully resolve in time. This was an optional enhancement, and I chose to focus on core functionality and responsiveness instead.
+
+That said, I’m really interested in learning how to properly use the `metadata` API and improve SEO in Next.js. I’d love to revisit this in the future with more time or guidance.
+
+
 ## Final Thoughts
 
 Before this project, I had never worked with **Next.js** or **MikroORM**, so I had to teach myself how to set up a modern full-stack app from scratch. By learning how the App Router works in Next.js and configuring the MikroORM entities and database seeding, I challenged myself to quickly adapt to new tools and frameworks—skills that are critical in any real-world development environment.
