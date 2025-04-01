@@ -8,14 +8,17 @@ type Context = {
   };
 };
 
-export async function GET(
-  request: NextRequest,
-  context: Context
-) {
+export async function GET(request: NextRequest, context: Context) {
   try {
     const { id } = context.params;
+
     const orm = await initORM();
     const em = orm.em.fork();
+
+
+    if (!Product) {
+      throw new Error('Product entity not found');
+    }
 
     const product = await em.findOne(Product, { id: Number(id) });
 

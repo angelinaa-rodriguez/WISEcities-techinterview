@@ -5,9 +5,12 @@ import { Cart } from './models/Cart';
 
 const config = (await import('./mikro-orm.config.cjs')).default;
 
+
 const seed = async () => {
   const orm = await MikroORM.init(config);
   const em = orm.em.fork();
+  const generator = orm.getSchemaGenerator();
+  await generator.refreshDatabase();
 
 
   // Delete old data first to prevent duplicates
@@ -82,13 +85,17 @@ const seed = async () => {
   
 
   for (const p of products) {
-    const product = new Product();
-    product.name = p.name;
-    product.description = p.description;
-    product.price = p.price;
-    product.imageUrl = p.imageUrl;
+    const product = em.create(Product, p);
     em.persist(product);
   }
+
+  const cartItem = em.create(Cart, {
+    id: 1,
+    product: products[0],
+    quantity: 2,
+  });
+  em.persist(cartItem);
+
 
   await em.flush();
   await orm.close();

@@ -1,7 +1,7 @@
 import { Entity, PrimaryKey, Property, ManyToOne } from '@mikro-orm/core';
 import { Product } from './Product';
 
-@Entity()
+@Entity({ tableName: 'Cart' })
 export class Cart {
   @PrimaryKey({ type: 'number' })
   id!: number;

@@ -40,7 +40,7 @@ export default function ProductPage() {
 
     const timeout = setTimeout(() => {
       setFetchTimedOut(true);
-    }, 2000); // Show "not found" only after 2 seconds
+    }, 5000);
 
     const fetchData = async () => {
       try {
