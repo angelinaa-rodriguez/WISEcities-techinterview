@@ -42,6 +42,10 @@ While the original design prioritized pixel-perfect rendering at desktop width (
 ### State Management
 - Global cart state handled with **React Context API**
 
+### Containerization
+- Docker support for full app environment
+- SQLite database mounted into the container at runtime
+
 ## Development Notes
 
 ### Challenges Faced
@@ -54,6 +58,12 @@ While the original design prioritized pixel-perfect rendering at desktop width (
 
 - **Cart logic with context:**  
   Managing item quantities across pages required a shared cart state. I created a custom context (`CartContext`) that provides `addToCart` and `removeFromCart` logic, and updates the global badge icon in the header in real-time.
+
+- **MikroORM metadata discovery issues**
+  Learned to explicitly type entity properties (`@Property({ type: 'string' })`) and avoid runtime reflection pitfalls by directly importing entities.
+
+- **SQLite + Docker volume linking**
+  Used `-v ${PWD}/wise-cities.db:/app/wise-cities.db` to persist seed data between dev and Dockerized prod containers.
 
 ## Getting Started
 
@@ -75,7 +85,13 @@ npx tsx seed.ts
 npm run dev
 ```
 
-4. Visit the app at **http://localhost:3000**
+4. Run the Docker
+```bash
+docker build --no-cache -t wise-cities-ecommerce .
+docker run -p 3000:3000 -v "${PWD}/wise-cities.db:/app/wise-cities.db" wise-cities-ecommerce
+```
+
+5. Visit the app at **http://localhost:3000**
 
 
 ## Directory Structure
@@ -84,11 +100,26 @@ npm run dev
 
 - /components – Shared UI components (ProductGrid, Header, etc.)
 
-- /lib/CartContext.tsx – Context provider for cart state
+- /models - MikroORM entity classes
 
+- /lib – ORM initialization & Cart context
+  
+- /public - Static assets (images)
+  
 - /pages/api – API endpoints for product retrieval and cart interaction
 
-- /seed.ts – Script to initialize product data in SQLite
+- /seed.ts – Seeds SQLite DB with product data
+
+## Lessons Learned
+
+Before this project, I had never worked with Next.js, MikroORM, or Docker volumes. I had to learn:
+
+- How to set up entities and migrations in MikroORM
+- How to persist a SQLite DB between local and container environments
+- How Next.js App Router differs from Pages Router
+- How to Dockerize an ORM-backed full-stack app cleanly
+
+I built every part of this app myself, from the layout and styling to the DB seeding, API routing, and container setup. I also learned how to debug low-level ORM and metadata issues, and gained confidence in troubleshooting complex full-stack errors independently.
 
 ## Optional Enhancement: SEO Metadata
 
