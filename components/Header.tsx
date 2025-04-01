@@ -16,7 +16,7 @@ export default function Header() {
       >
               
         {/* Left side (Logo and Name as Link to homepage) */}
-        <Link href="/" className="flex items-center w-[127px] h-[32px] gap-0 text-black hover:opacity-80 transition">
+        <Link href="/" className="flex items-center w-[127px] h-[32px] gap-0 hover:opacity-80 transition">
           <div className="w-8 h-8 flex items-center justify-center">
             <Image
               src="/logo.png"
@@ -40,7 +40,7 @@ export default function Header() {
                   className="w-full h-full p-2 rounded-full flex items-center justify-center hover:bg-gray-200 transition"
                   aria-label="Shopping Cart"
                 >
-                  <ShoppingBag className="w-[24px] h-[24px] text-black stroke-[2.5]" />
+                  <ShoppingBag className="w-[24px] h-[24px] text-rgba(30, 30, 30, 1) stroke-[2.5]" />
 
                   {totalItems > 0 && (
                     <div className="absolute -top-1 -right-1 bg-[#f31260] text-white text-xs leading-[16px] font-medium text-center rounded-full px-[6px] py-[2px] min-w-[20px] h-[20px] flex items-center justify-center">
