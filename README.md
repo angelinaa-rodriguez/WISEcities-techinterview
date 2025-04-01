@@ -86,9 +86,16 @@ npm run dev
 ```
 
 4. Run the Docker
-```bash
-docker build --no-cache -t wise-cities-ecommerce .
-docker run -p 3000:3000 -v "${PWD}/wise-cities.db:/app/wise-cities.db" wise-cities-ecommerce
+
+Windows:
+```Powershell
+Remove-Item wise-cities.db -ErrorAction Ignore; npx tsx seed.ts; docker build --no-cache -t wise-cities-ecommerce .; docker run -p 3000:3000 -v "${PWD}\wise-cities.db:/app/wise-cities.db" wise-cities-ecommerce
+```
+
+Mac/Linux:
+``` Bash
+rm -f wise-cities.db && npx tsx seed.ts && docker build --no-cache -t wise-cities-ecommerce . && docker run -p 3000:3000 -v "$(pwd)/wise-cities.db:/app/wise-cities.db" wise-cities-ecommerce
+
 ```
 
 5. Visit the app at **http://localhost:3000**
