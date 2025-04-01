@@ -74,7 +74,7 @@ const ProductGrid: React.FC<ProductGridProps> = ({ products, title }) => {
               <div className="h-[64px] flex items-center justify-between px-[12px] gap-[8px] mt-3">
                 {/* Price Pill */}
                 <div
-                  className={`h-[40px] rounded-xl px-[14px] py-[10px] cursor-pointer transition-all flex items-center justify-center ${
+                  className={`h-[40px] rounded-xl px-[14px] py-[10px] cursor-pointer transition-all flex items-center justify-center text-black ${
                     isPriceActive ? 'w-[120px] bg-[#f0ecec]' : 'w-[90px] hover:bg-[#f0ecec]'
                   }`}
                   onClick={() => handleTogglePrice(product.id)}

@@ -167,7 +167,7 @@ export default function ProductPage() {
       <div className="w-full max-w-[600px] h-px bg-gray-300 my-5 mx-auto" />
 
       {/* Similar Products */}
-      <h2 className="text-[32px] font-medium leading-[32px] tracking-tight text-[#11181C] mt-4" style={{ width: '492px' }}>
+      <h2 className="text-[32px] font-medium leading-[32px] tracking-tight mt-4" style={{ width: '492px' }}>
         Similar Products
       </h2>
 
